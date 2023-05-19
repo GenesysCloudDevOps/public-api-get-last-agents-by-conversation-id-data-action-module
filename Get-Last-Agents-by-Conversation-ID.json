@@ -1,0 +1,52 @@
+{
+  "name": "Get Last Agents by Conversation ID",
+  "integrationType": "purecloud-data-actions",
+  "actionType": "custom",
+  "config": {
+    "request": {
+      "requestUrlTemplate": "/api/v2/conversations/${input.ConversationID}",
+      "requestType": "GET",
+      "headers": {},
+      "requestTemplate": "${input.rawRequest}"
+    },
+    "response": {
+      "translationMap": {
+        "userId": "$.participants[?(@.purpose == 'agent')].userId"
+      },
+      "translationMapDefaults": {
+        "userId": "[\"Not Found\"]"
+      },
+      "successTemplate": "{\"userId\" : ${userId}}}"
+    }
+  },
+  "contract": {
+    "input": {
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "conversationId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "output": {
+      "successSchema": {
+        "title": "List of last userIds",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "array",
+            "items": {
+              "title": "Item 1",
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "secure": false
+}
